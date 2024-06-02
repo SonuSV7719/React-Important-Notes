@@ -1,0 +1,451 @@
+React Notes |
+===========================================
+
+✅️In React, re-renders happen under several circumstances:
+
+	1. State Changes: When the setState function is called, React schedules a re-render for the component. This applies to both class components using this.setState and function components using the useState hook.
+
+	2. Props Changes: When a component receives new props from its parent component, React will re-render the component to reflect the new props.
+
+	3. Context Changes: If a component consumes context via useContext or Context.Consumer, it will re-render whenever the context value changes.
+
+	4. Force Update: When a component's forceUpdate method is called (in class components), it forces a re-render.
+
+	5. Parent Component Re-renders: When a parent component re-renders, all its child components will also re-render by default, unless shouldComponentUpdate, React.memo, or useMemo is used to prevent this.
+
+	6. useReducer: Similar to useState, when the dispatch function returned by useReducer is called, React schedules a re-render for the component.
+	
+==================================================================================================================================================================
+
+Additionally, React's reconciliation process determines whether an actual DOM update is necessary by comparing the Virtual DOM representations before and after the re-render (diffing algorithm).
+
+=========================================================
+	✅️Optimization Techniques
+	To avoid unnecessary re-renders and improve performance, you can use the following techniques:
+
+		1. shouldComponentUpdate: In class components, override this lifecycle method to return false if the component does not need to re-render.
+
+		2. React.memo: For function components, wrap the component with React.memo to prevent re-renders if props have not changed.
+
+		3. useMemo: Memoize expensive calculations within a function component to avoid re-calculating them on every render.
+
+		4. useCallback: Memoize callback functions within a function component to avoid passing new function references on every render.
+
+		5. useSelector: In a Redux setup, use shallow equality checking with useSelector to prevent unnecessary re-renders.
+
+====================================================================================================================================================================
+
+React Has virtual DOM which in memory DOM structure to prevent multi time rendering of element it only render element when some change happen between previous and current state of element --> Reconsilation property 
+
+When react re render --> change in state, component variables etc then
+
+==================================================================================================================================================================
+
+
+✅️Transpiler
+
+============================
+A transpiler is a type of compiler that translates source code written in one programming language into another language at the same level of abstraction. This process is particularly common in modern web development, where developers often use languages or syntactic sugar that needs to be converted into plain JavaScript to be executed by web browsers.
+
+Babel: One of the most popular JavaScript transpilers. It is primarily used to convert ES6/ES7/ES8+ code into ES5, ensuring compatibility with all browsers. Babel also supports JSX syntax used in React.
+==================================================================================================================================================================
+
+React Lifecycle:
+==========================
+
+
+✅️✅️Lifecycle Methods
+=============================
+✅️Mounting (when a component is created and inserted into the DOM)
+	✅️constructor(): Initializes state and binds methods.
+	✅️static getDerivedStateFromProps(): Sync state to props. Rarely used.
+	✅️render(): Returns the JSX to be rendered.
+	✅️componentDidMount(): Runs after the component is inserted into the DOM. Ideal for network requests, subscriptions.
+✅️Updating (when props or state changes)
+	✅️static getDerivedStateFromProps(): Called again with new props.
+	✅️shouldComponentUpdate(): Determines if the component should re-render. Defaults to true.
+	✅️render(): Returns the JSX to be rendered.
+	✅️getSnapshotBeforeUpdate(): Captures some information (e.g., scroll position) before the DOM is updated.
+	✅️componentDidUpdate(): Runs after the component updates in the DOM. Ideal for DOM manipulations or network requests based on previous state/props.
+✅️Unmounting (when a component is removed from the DOM)
+	✅️componentWillUnmount(): Cleanup tasks like invalidating timers, canceling network requests, or cleaning up subscriptions.
+
+
+
+
+============================
+✅️✅️Sample Code:           |
+============================
+
+
+import React, { Component } from 'react';
+
+class MyComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { count: 0 };
+    console.log('Constructor: Initializes state and binds methods');
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    console.log('getDerivedStateFromProps: Sync state to props if needed');
+    return null; // Return an object to update state or null to do nothing
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount: Component inserted into the DOM');
+    // Ideal for network requests, subscriptions
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('shouldComponentUpdate: Determine if re-render is needed');
+    return true; // Return false to prevent re-render
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log('getSnapshotBeforeUpdate: Capture info before DOM updates');
+    return null; // Return a value or null
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log('componentDidUpdate: DOM updated');
+    // Ideal for DOM manipulations or network requests based on previous state/props
+  }
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount: Cleanup before component removal');
+    // Cleanup tasks like invalidating timers, canceling network requests
+  }
+
+  handleClick = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  render() {
+    console.log('render: Returns JSX to be rendered');
+    return (
+      <div>
+        <p>Count: {this.state.count}</p>
+        <button onClick={this.handleClick}>Increment</button>
+      </div>
+    );
+  }
+}
+
+export default MyComponent;
+
+
+
+
+==========================================================================================================================================
+✅️What is hook:
+================
+	1. hooks are the functions to use some react features in functional components
+	2. In other words, hooks are functions that make functional Component work like class component
+	3. Before react lauched hook there is only one way to use states and react lifecycle is only using react class component.
+	4. Hooks are functions that makes functional component work like class component.
+	5. Hooks are the way to use lifecycle methods of class component.
+
+=================================================================================================================================================
+✅️Types of hooks:
+===================
+
+1. ✅️useState:
+===================
+	--> what?
+		--> useState hook is a function to add state in functional component 
+	--> What is state --> state is nothing but just values or variables.
+	
+	Syntax: 
+	===========
+	-->	const [value, setValue] = useState([defaultValue])
+	--> Array destructuring used here there is also object destructuring
+	--> ... (spread operator) --> used to copy values from array or object in other array or object
+	**--> setValue((prev) => console.log(prev) --> stores previous state automatically
+	--> when working with array or object we need to update using above syntax first prev value then newvalue
+		--> example 
+			function increemntCnt()
+		 	{
+		 	setDetails((prev) => ({...prev, counter: prev.counter + 1}))
+		 	}
+	 	
+======================================================================================================================
+	 	
+2. ✅️useEffect:
+===================	
+
+--> What is useEffect
+	--> useEffect is used to perform side effects in out components.
+--> What is side effect?
+	--> Side effect are the actions which are performed with the outside world.
+	--> We perform a side effect when we need to reach outside of our react components to do something.
+	--> Example.(Side effect)
+		--> Fetching data from API
+		--> updating the DOM document & window
+		--> Timer functions setTimeout & setInterval
+		
+--> Syntax : 
+	--> useEffect(callback, [dependencies])
+	--> callback --> what to run
+	--> dependencies --> when to run
+--> It's a combination of componentDidMount, componentDidUpdate, componentWillUnmount --> of class component.--> useEffect
+
+--> Types or variations:
+	--> useEffect without dependencies 
+		--> Example: Change title of page each time when component re-renders
+		--> Run on each re-renders.
+	--> useEffect with empty dependencies
+		--> Run only once 
+		--> Run only first render of component.
+		--> Example : Fetch data on screen visible.
+	--> useEffect with variable
+		--> Run on change of state or dependencies.
+		
+--> Cleanup function:
+	--> example when to use
+		const [time, setTime] = useState(0);
+		useEffect(() => {
+			setInterval(() => {
+				setTime(time + 1);
+			 }, 1000);
+		})	
+		
+		display time	
+	--> How to use:
+		const [time, setTime] = useState(0);
+		useEffect(() => {
+			const timer = setInterval(() => {
+				setTime(time + 1);
+			 }, 1000);
+			 
+			 // Clean up logic --> Run on unmount of component --> Called when component is unmounted
+			 return () => {
+			 	cleanInteravl(timer)
+			 }
+			 
+		},)
+		
+	--> Example use case:  to show working --> To see when clean up function works
+		
+		const [count, setCount] = useState(0);
+		useEffect(() => {
+			 console.log("Run useEffect", count);
+			 
+			 // Clean up logic --> Run on unmount of component --> Called when component is unmounted
+			 return () => {
+			 	console.log("Clean Run", count);
+			 }
+			 
+		}, [count])
+		
+		display both using JSX --> Create a button first 
+		
+		--> When we need to stop repeated side effect when your component unmount then clean up function.
+		
+		
+		
+===========================================================================================================================================================
+
+3. ✅️useContext hook:
+=====================
+
+--> useContect hoook is used to manage global data in react application.
+--> Like global state, services, themes, user settings
+--> Why?
+	--> app --> child 1--> child 2--> chil3 --> when we need to pass state from app to depest child component then 
+	--> We can use props but it not a good way and its very annoying
+--> Used to manage global data in react.
+--> if you want to pass dat just for child componnent, then you can use props.
+	
+--> Steps:
+	--> Creating the context
+		--> use createContext 
+		--> const loginContext = createContext();
+	--> Providing the context
+		--> <loginContext.Provider value = {value}><childComponents/><loginContext.Provider/>
+	--> Consuming the context
+		--> Import previously created context
+		--> useContext used for this task
+		--> const login = useContext(loginContext)
+		--> pass context which created in previous step.
+	
+--> Best practices 	
+
+	--> First create one new file in src called --> context
+	--> create a file in that folder for context.
+	--> <loginContext.Provider value = {value}>{props.children}<loginContext.Provider/>
+	--> Then import that component and inside of that component define children which should have the access to context value.
+
+
+=============================================================================================================================================================			
+4. ✅️useRef hook:
+===================
+
+--> Use cases :
+	1. useRef is allow us to create mutable variables which ***don't cause re-render --> syntax --> const variableName = useRef([defaultValue]) defaultValue is 		   optional
+	2. It is very useFull to direct access DOM element
+		--> const reference = useRef();
+		--> <div ref = {reference}></div>
+		--> reference.current.property
+	
+--> .current property used for to set or get value.
+--> Example : Count how many render happens while typing text in input box
+--> Why useRef not useState because useState cause re render but useRef not.
+
+
+useEffect(() => {
+setCount(prev => prev + 1)
+}) --> Infinite loop because of state change each time here we need useRef
+--> This thing happen without typing anything 
+
+--> const count = useRef(0)
+--> count variable is object which have current property
+--> useEffect(() => {
+	count.current += 1;
+    })
+
+=================================================================================================================================================================
+	
+5. ✅️useReducer
+===================
+--> what?
+	--> useReducer is used to manage state in our react application
+	--> In other words, useReducer works like a state mangement tool.
+--> What is state management:
+	--> state management is used to manage all states of application in simple way.
+	--> Always use the useReducer hook when you have a lot of states and methods to handle.
+	
+--> How to apply?
+
+	const initialState = {count : 0}
+	
+	const ACTION = {
+	
+		INCREASE : "increase",
+		DECREASE : "decrease"
+	
+	}
+	
+	const reducer = (state, action) => {
+	
+		switch(action.type){
+			case INCREASE:
+				return {count: state.count + 1
+			case DECREASE:
+				return {count: state.count - 1
+				
+			default:
+				return state
+			}
+		}
+	
+	}
+	 
+	 const [state, dispatch] = useReducer(reducer, initialState)
+	 
+	 dispatch({type: INCREASE}) 
+	 dispatch({type: DECREASE}) 
+	 
+	 
+==================================================================================================================================================================
+
+6. ✅️useLayoutEffect hook:
+=============================
+
+--> useLayoutEffect works exactly the same as useEffect(also the same syntax).
+--> useEffect runs after the DOM is printed on the browser.
+--> useLayoutEffect runs Before the DOM is printed on the browser.
+--> useEffect is Asynchronous
+--> useLayoutEffect is Synchronous.
+--> Whenever we want to run code before the DOM is printed.
+	--> Example: height, width, anything realated to layout
+	
+--> The most common use case of useLayoutEffect is to get the dimension of the layout.
+--> That's why it's name is useLayoutEffect.
+
+
+workflow:
+=================
+react calculate this component --> useLayoutEffect --> react print all element on DOM --> useEffect
+
+
+=================================================================================================================================================================
+
+7. ✅️useMemo Hook:
+=======================
+
+--> useMemo hook is used to apply Memoization in react.
+--> What is Memoization?
+	--> Memoization is a technique for improving the performance of code.
+	--> It is useFull to avoid expensive calculations on every render when the returned value is not change.
+	
+--> Due to re render expensive function again and again called when not required also.
+--> const memoCalculation = useMemo(() => {
+
+		return expensiveFunc(number)
+
+	}, [number])
+	
+	--> When number change then and then only callback function works
+	
+--> Same like useEffect but return something but useEffect not return anything.
+
+--> Example
+	--> Increment counter + change theme of DOM using some function
+
+
+==============================================================================================================================================================
+
+8. ✅️useCallback Hook:
+=======================	 
+
+--> useCallback is used to return Memoize function.
+--> It's also useful for preventing functions from being re-created on re-rendering.
+--> Example
+	--> Increment counter + change theme of DOM using some function
+	
+--> const calculateTable = () => {
+
+	return someCalculation
+
+}
+
+
+some code to change theme
+
+return (
+
+	<PrintTable fun = {calculateTable}/>
+	button to  toggle theme
+)
+
+
+--> if we run this program it will call PrintTable component as function is created and new value generated but if we click on toggle button also then also it will run calculateTable function due to this PrintTable component again rendered
+--> This is expensive operation or need more memory to solve this we use useCallback
+--> **useMemo --> return memoized value, cannot pass parameter
+--> **useCallback --> return memoized function, can pass parameter calculate(2)
+
+solution :
+--------------------
+calculateTable --> function
+const calculateTable = useCallback((value) => {
+
+	return calculation
+}, [number])
+
+calculateTable(2)
+
+--> improve performance
+
+
+===================================================================================================================================================================
+8. ✅️custom Hook:
+=======================	
+--> Are basically a reusable functions.
+--> Own hooks that you create for your own use.
+--> In that you can use different inbuild hooks.
+--> example useFetch
+--> Create customhooks folder
+--> file name should start with use
+	
+	
