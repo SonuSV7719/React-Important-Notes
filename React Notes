@@ -461,5 +461,36 @@ const { key, key2 } = {
 }
 
 console.log( key, key2 ) --> Output: Sonu ABC
+
+10. Children props:
+
+Add children in which component you want children
+
+<UseRefUseCases>
+        <UseCaseCleanUp />
+        <UseCasesOfUseEffect/>
+</UseRefUseCases>
+
+
+import React, { useEffect, useState, useRef } from 'react'
+
+function UseRefUseCases(props) {
+
+    
+    useEffect(() => {
+        console.log("props: ", props.children) // children will contain refrence object for  <UseCaseCleanUp />, <UseCasesOfUseEffect/>
+
+    }, [])
+
+
+    return (
+        <div>
+		{props.children}  --> Help to run children component if this not done then children component will won't work
+        </div>
+
+    )
+}
+
+export default UseRefUseCases
 	
 	
