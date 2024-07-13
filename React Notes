@@ -506,3 +506,6 @@ steps:
 <Suspense fallback={}>
 <lazyComp/>
 </Suspense>
+
+2. Use useMemo and useCallback to avoid re render of heavy functions
+3. When adding event listner then use useEffect and unmount the event by cleanup process
