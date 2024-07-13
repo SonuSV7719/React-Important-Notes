@@ -492,5 +492,17 @@ function UseRefUseCases(props) {
 }
 
 export default UseRefUseCases
-	
-	
+
+
+
+9. ✅️Make React app faster:
+
+1. Use lazy loading: --> Component which is heavy to load use lazy loading for it.
+
+steps:
+1. const lazyComp  = React.lazy(() => import(../component)
+2. Wrap lazy compnent into suspense component
+
+<Suspense fallback={}>
+<lazyComp/>
+</Suspense>
