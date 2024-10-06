@@ -375,6 +375,9 @@ react calculate this component --> useLayoutEffect --> react print all element o
 =======================
 
 --> useMemo hook is used to apply Memoization in react.
+--> useMemo is a React Hook that helps optimize performance by memoizing the result 
+    of an expensive computation. It allows you to avoid recalculating values unless their dependencies change. 
+    This is especially useful when you have complex calculations or functions that should only be recalculated when necessary.
 --> What is Memoization?
 	--> Memoization is a technique for improving the performance of code.
 	--> It is useFull to avoid expensive calculations on every render when the returned value is not change.
@@ -394,12 +397,52 @@ react calculate this component --> useLayoutEffect --> react print all element o
 	--> Increment counter + change theme of DOM using some function
 
 
+
+UseCase example:
+
+import React, { useState, useMemo } from 'react';
+
+const ExpensiveComponent = () => {
+  const [count, setCount] = useState(0);
+  const [otherState, setOtherState] = useState(false);
+
+  // Simulating a CPU-intensive calculation
+  const expensiveCalculation = (num) => {
+    console.log('Calculating...');
+    for (let i = 0; i < 1000000000; i++) {}
+    return num * 2;
+  };
+
+  // Memoizing the expensive calculation so it only runs when count changes
+  const memoizedValue = useMemo(() => expensiveCalculation(count), [count]);
+
+  return (
+    <div>
+      <h1>Count: {count}</h1>
+      <h2>Expensive Calculated Value: {memoizedValue}</h2>
+
+      <button onClick={() => setCount(count + 1)}>Increment Count</button>
+      <button onClick={() => setOtherState(!otherState)}>
+        Toggle Other State
+      </button>
+
+      <p>Other state: {otherState ? 'True' : 'False'}</p>
+    </div>
+  );
+};
+
+export default ExpensiveComponent;
+
+
 ==============================================================================================================================================================
 
 8. ✅️useCallback Hook:
 =======================	 
 
 --> useCallback is used to return Memoize function.
+--> useCallback is a hook used to memoize functions, preventing them from being recreated 
+    on every render unless their dependencies change. This is especially useful when passing functions 
+    as props to child components to avoid unnecessary re-renders.
 --> It's also useful for preventing functions from being re-created on re-rendering.
 --> Example
 	--> Increment counter + change theme of DOM using some function
@@ -437,6 +480,90 @@ calculateTable(2)
 
 --> improve performance
 
+
+
+---- Example 
+
+import React, { useState, useCallback } from 'react';
+
+// Child component
+const ChildComponent = React.memo(({ handleClick }) => {
+  console.log('ChildComponent re-rendered');
+  return (
+    <div>
+      <button onClick={handleClick}>Click me</button>
+    </div>
+  );
+});
+
+const ParentComponent = () => {
+  const [count, setCount] = useState(0);
+
+  // Memoize the handleClick function
+  const handleClick = useCallback(() => {
+    console.log('Button clicked');
+  }, []);
+
+  return (
+    <div>
+      <h1>Count: {count}</h1>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+      <ChildComponent handleClick={handleClick} />
+    </div>
+  );
+};
+
+export default ParentComponent;
+
+
+Explaination:
+--------------------
+1. Now, handleClick is memoized using useCallback and will only be re-created if its dependencies (currently none) change.
+2. This ensures that the ChildComponent does not re-render when the parent 
+state (count) changes, unless the handleClick function changes.
+
+
+UseCase Example:
+
+import React, { useState, useCallback } from 'react';
+
+// Child component (no React.memo)
+const ChildComponent = ({ handleClick, theme }) => {
+  console.log('ChildComponent re-rendered');
+  return (
+    <div style={{ background: theme }}>
+      <button onClick={handleClick}>Click me</button>
+    </div>
+  );
+};
+
+const ParentComponent = () => {
+  const [count, setCount] = useState(0);
+  const [theme, setTheme] = useState('lightblue');
+
+  // Memoize the handleClick function to avoid unnecessary re-creation
+  const handleClick = useCallback(() => {
+    console.log(`Button clicked, count is ${count}`);
+  }, [count]);
+
+  // Toggle theme
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === 'lightblue' ? 'lightcoral' : 'lightblue'));
+  };
+
+  return (
+    <div>
+      <h1>Count: {count}</h1>
+      <button onClick={() => setCount(count + 1)}>Increment Count</button>
+      <button onClick={toggleTheme}>Toggle Theme</button>
+      <ChildComponent handleClick={handleClick} theme={theme} />
+    </div>
+  );
+};
+
+export default ParentComponent;
+
+export default ParentComponent;
 
 ===================================================================================================================================================================
 8. ✅️custom Hook:
