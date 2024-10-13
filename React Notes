@@ -135,6 +135,88 @@ class MyComponent extends Component {
 export default MyComponent;
 
 
+==========================================================================================================================================
+✅️JSX (Javscript XML):
+================================
+✅️ What? Explain that JSX (JavaScript XML) is a syntax extension of JavaScript that allows developers to write HTML-like code 
+within JavaScript files. It's used to describe the UI structure in React.
+
+✅️ JSX vs JavaScript:
+const name = "John";
+return <h1>Hello, {name}</h1>; // Output: Hello, John
+
+✅️ JSX Syntax Rules:
+1. Self-Closing Tags: Explain that JSX requires self-closing tags for elements like <img />, <input />, or <br />, 
+which differ from HTML.
+2. Class vs className: In JSX, the class attribute is written as className because class is a reserved keyword in JavaScript.
+```
+<div className="my-class"></div>
+```
+
+3.Style Attribute: The style attribute in JSX is different from HTML. Instead of a string, 
+it accepts an object with camelCased properties: 
+
+```
+<div style={{ backgroundColor: 'blue', color: 'white' }}>Styled Text</div>
+
+```
+
+✅️ JSX Expressions:
+1. Embedding Variables: Show how to use variables, functions, and expressions directly inside JSX:
+
+```
+const age = 25;
+return <p>{age >= 18 ? 'Adult' : 'Minor'}</p>;
+```
+
+2. Conditionals in JSX: Demonstrate conditional rendering with expressions like ternary 
+operators and && for conditional inclusion.
+
+```
+{isLoggedIn && <p>Welcome back!</p>}
+```
+
+✅️JSX Components:
+```
+function Greeting() {
+  return <h1>Hello, World!</h1>;
+}
+```
+
+✅️ JSX Fragments
+
+```
+return (
+  <>
+    <h1>Heading</h1>
+    <p>Paragraph</p>
+  </>
+);
+
+```
+
+✅️ JSX and Props
+
+```
+function Welcome(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+<Welcome name="Sara" />
+
+```
+
+✅️ JSX with Lists and Keys
+
+const items = ['Apple', 'Banana', 'Cherry'];
+return (
+  <ul>
+    {items.map((item, index) => (
+      <li key={index}>{item}</li>
+    ))}
+  </ul>
+);
+
+✅️ JSX Transpilation
 
 
 ==========================================================================================================================================
