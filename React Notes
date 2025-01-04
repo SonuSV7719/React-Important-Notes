@@ -718,3 +718,104 @@ steps:
 
 2. Use useMemo and useCallback to avoid re render of heavy functions
 3. When adding event listner then use useEffect and unmount the event by cleanup process
+
+
+
+-----------------------------------------------------------------------------------------------------------------
+✅️React Memo:
+React.memo is a higher-order component (HOC) in React used to optimize the performance of functional components by preventing unnecessary re-renders. It works similarly to PureComponent for class components but for functional components. Here's a detailed explanation of why and when to use React.memo:
+✅️Reasons to Use React.memo:
+✅️Prevent Unnecessary Re-Renders:
+-> React components re-render whenever their parent re-renders, even if their props haven't changed.
+-> React.memo ensures that a functional component only re-renders when its props or state actually change.
+
+Example: 
+
+```
+const ChildComponent = React.memo(({ count }) => {
+  console.log("Child rendered");
+  return <p>Count: {count}</p>;
+});
+
+function ParentComponent() {
+  const [count, setCount] = React.useState(0);
+  const [text, setText] = React.useState("");
+
+  return (
+    <div>
+      <button onClick={() => setCount((prev) => prev + 1)}>Increment Count</button>
+      <input onChange={(e) => setText(e.target.value)} value={text} />
+      <ChildComponent count={count} />
+    </div>
+  );
+}
+```
+
+✅️Use with useMemo or useCallback:
+
+--> In cases where you pass memoized values (useMemo) or functions (useCallback) as props, React.memo ensures the receiving component re-renders only when necessary.
+Example:
+
+```
+const Button = React.memo(({ onClick, label }) => {
+  console.log("Button rendered");
+  return <button onClick={onClick}>{label}</button>;
+});
+
+function App() {
+  const [count, setCount] = React.useState(0);
+
+  const increment = React.useCallback(() => setCount((prev) => prev + 1), []);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <Button onClick={increment} label="Increment" />
+    </div>
+  );
+}
+```
+--> Here, React.memo combined with useCallback ensures that the Button component doesn't re-render unnecessarily.
+
+
+✅️Avoid Re-renders of Static Data:
+
+✅️Components that rely on static data (like configuration or constant props) benefit from React.memo.
+Example:
+
+```
+const StaticInfo = React.memo(() => {
+  console.log("StaticInfo rendered");
+  return <div>Static Information</div>;
+});
+
+function App() {
+  const [count, setCount] = React.useState(0);
+
+  return (
+    <div>
+      <button onClick={() => setCount((prev) => prev + 1)}>Increment</button>
+      <StaticInfo />
+    </div>
+  );
+}
+```
+
+
+✅️Key Considerations:
+✅️Shallow Comparison:
+
+-> React.memo performs a shallow comparison of props by default.
+-> If props contain complex objects or arrays, use a custom comparison function to avoid unnecessary re-renders.
+```
+React.memo(Component, (prevProps, nextProps) => {
+  // Custom comparison logic
+  return prevProps.someProp === nextProps.someProp;
+});
+```
+✅️When Not to Use React.memo:
+
+--> If a component is simple or has negligible rendering overhead, React.memo may introduce unnecessary complexity.
+Use it only when re-renders impact performance significantly.
+--> State Changes:
+--> React.memo doesn't prevent re-renders caused by changes in the component's own state.
