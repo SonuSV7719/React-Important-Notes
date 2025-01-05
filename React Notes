@@ -324,7 +324,7 @@ return (
 		
 		--> When we need to stop repeated side effect when your component unmount then clean up function.
 		
-		
+	--> Clean up function run on every component unmount and when dependency change it run for previous function call	
 		
 ===========================================================================================================================================================
 
